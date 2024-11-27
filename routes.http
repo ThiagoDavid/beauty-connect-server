@@ -1,46 +1,18 @@
-POST https://beauty-connect-server.onrender.com/users
+POST http://localhost:3333/users
 Content-Type: application/json
 
 {
-  "name": "Node",
-  "email": "testeUser+3@teste.com",
+  "name": "Node 2",
+  "email": "testeUser+4@teste.com",
   "password": "123",
   "role": "client"
 }
 
 ###
-GET https://beauty-connect-server.onrender.com/users
+GET http://localhost:3333/users
 
 ###
-PUT https://beauty-connect-server.onrender.com/users/4
-Content-Type: application/json
-
-{
-  "name": "Teste Node",
-  "email": "testeUser+3@teste.com",
-  "password": "123",
-  "role": "client"
-}
-
-###
-DELETE https://beauty-connect-server.onrender.com/users/3
-
-###
-POST https://beauty-connect-server.onrender.com/salons
-Content-Type: application/json
-
-{
-  "name": "Node",
-  "email": "testeUser+3@teste.com",
-  "password": "123",
-  "role": "client"
-}
-
-###
-GET https://beauty-connect-server.onrender.com/salons
-
-###
-PUT https://beauty-connect-server.onrender.com/salons/4
+PUT http://localhost:3333/users/4
 Content-Type: application/json
 
 {
@@ -51,5 +23,146 @@ Content-Type: application/json
 }
 
 ###
-DELETE https://beauty-connect-server.onrender.com/salons/3
+DELETE http://localhost:3333/users/6
 
+### SALONS
+POST http://localhost:3333/salons
+Content-Type: application/json
+
+{
+  "name": "Salon C",
+  "latitude": 40.7128,
+  "longitude": -74.0060,
+  "picture": "http://example.com/picture.jpg",
+  "average_rating": 4.5,
+  "totalReviews": 100,
+  "description": "A great salon for all your needs."
+}
+
+###
+GET http://localhost:3333/salons
+
+###
+PUT http://localhost:3333/salons/1
+Content-Type: application/json
+
+{
+  "name": "Updated Salon B",
+  "latitude": 40.7128,
+  "longitude": -74.0060,
+  "picture": "http://example.com/updated_picture.jpg",
+  "averageRating": 4.7,
+  "totalReviews": 120,
+  "description": "An updated description for Salon A."
+}
+
+###
+DELETE http://localhost:3333/salons/1
+
+### SERVICES
+POST http://localhost:3333/services
+Content-Type: application/json
+
+{
+  "name": "Haircut",
+  "duration": 30
+}
+
+###
+GET http://localhost:3333/services
+
+###
+PUT http://localhost:3333/services/1
+Content-Type: application/json
+
+{
+  "name": "Updated Haircut",
+  "duration": 45
+}
+
+###
+DELETE http://localhost:3333/services/1
+
+### queues
+POST http://localhost:3333/queue
+Content-Type: application/json
+
+{
+  "userId": 1,
+  "salonId": 2,
+  "serviceId": 2,
+  "timestamp": "2023-10-01T10:00:00Z"
+}
+
+###
+GET http://localhost:3333/queue
+
+###
+PUT http://localhost:3333/queue/2
+Content-Type: application/json
+
+{
+  "userId": 1,
+  "salonId": 2,
+  "serviceId": 2,
+  "timestamp": "2023-10-01T11:02:00Z"
+}
+
+###
+DELETE http://localhost:3333/queue/2
+
+### REVIEWS
+POST http://localhost:3333/reviews
+Content-Type: application/json
+
+{
+  "salonId": 2,
+  "userId": 1,
+  "rating": 5,
+  "comment": "Excellent service!"
+}
+
+###
+GET http://localhost:3333/reviews
+
+###
+PUT http://localhost:3333/reviews/1
+Content-Type: application/json
+
+{
+  "salonId": 2,
+  "userId": 1,
+  "rating": 4,
+  "comment": "Good service, but could be better."
+}
+
+###
+DELETE http://localhost:3333/reviews/1
+
+### ONGOINGSERVICES
+POST http://localhost:3333/ongoing-services
+Content-Type: application/json
+
+{
+  "salonId": 2,
+  "userId": 1,
+  "serviceId": 2,
+  "expectedEndTime": "2023-10-01T12:00:00Z"
+}
+
+###
+GET http://localhost:3333/ongoing-services
+
+###
+PUT http://localhost:3333/ongoing-services/1
+Content-Type: application/json
+
+{
+  "salonId": 2,
+  "userId": 1,
+  "serviceId": 1,
+  "expectedEndTime": "2023-10-01T13:00:00Z"
+}
+
+###
+DELETE http://localhost:3333/ongoing-services/3
