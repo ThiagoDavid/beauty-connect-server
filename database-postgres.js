@@ -1,38 +1,179 @@
 import { sql } from './db.js';
 
 export class DatabasePostgres {
-  async list(search = '') {
-    let videos;
-    if (search) {
-      videos = await sql`SELECT * FROM videos WHERE title ILIKE ${'%' + search + '%'}`;
-    } else {
-      videos = await sql`SELECT * FROM videos`;
-    }
-    return videos;
-  }
-
-  async create(video) {
-    const { title, description, duration } = video;
+  // Métodos para a tabela Users
+  async createUser(user) {
+    const { name, email, password, role } = user;
     await sql`
-      INSERT INTO videos (title, description, duration)
-      VALUES (${title}, ${description}, ${duration})
+      INSERT INTO "Users" (name, email, password, role)
+      VALUES (${name}, ${email}, ${password}, ${role})
     `;
   }
 
-  async update(id, video) {
-    // Implementar lógica de atualização
-    const { title, description, duration } = video;
+  async listUsers(search) {
+    if (search) {
+      return await sql` SELECT * FROM "Users" WHERE name ILIKE ${'%'+search+'%'}`;
+    }
+    return await sql`SELECT * FROM "Users"`;
+  }
+
+  async updateUser(id, user) {
+    const { name, email, password, role } = user;
     await sql`
-      UPDATE videos
-      SET title = ${title}, description = ${description}, duration = ${duration}
+      UPDATE "Users"
+      SET name = ${name}, email = ${email}, password = ${password}, role = ${role}
       WHERE id = ${id}
     `;
   }
 
-  async delete(id) {
-    // Implementar lógica de exclusão
+  async deleteUser(id) {
     await sql`
-      DELETE FROM videos
+      DELETE FROM "Users"
+      WHERE id = ${id}
+    `;
+  }
+
+  // Métodos para a tabela Salons
+  async createSalon(salon) {
+    const { name, latitude, longitude, picture, averageRating, totalReviews, description } = salon;
+    await sql`
+      INSERT INTO "Salons" (name, latitude, longitude, picture, averageRating, totalReviews, description)
+      VALUES (${name}, ${latitude}, ${longitude}, ${picture}, ${averageRating}, ${totalReviews}, ${description})
+    `;
+  }
+
+  async listSalons() {
+    return await sql`SELECT * FROM "Salons"`;
+  }
+
+  async updateSalon(id, salon) {
+    const { name, latitude, longitude, picture, averageRating, totalReviews, description } = salon;
+    await sql`
+      UPDATE "Salons"
+      SET name = ${name}, latitude = ${latitude}, longitude = ${longitude}, picture = ${picture}, averageRating = ${averageRating}, totalReviews = ${totalReviews}, description = ${description}
+      WHERE id = ${id}
+    `;
+  }
+
+  async deleteSalon(id) {
+    await sql`
+      DELETE FROM "Salons"
+      WHERE id = ${id}
+    `;
+  }
+
+  // Métodos para a tabela Services
+  async createService(service) {
+    const { name, duration } = service;
+    await sql`
+      INSERT INTO "Services" (name, duration)
+      VALUES (${name}, ${duration})
+    `;
+  }
+
+  async listServices() {
+    return await sql`SELECT * FROM "Services"`;
+  }
+
+  async updateService(id, service) {
+    const { name, duration } = service;
+    await sql`
+      UPDATE "Services"
+      SET name = ${name}, duration = ${duration}
+      WHERE id = ${id}
+    `;
+  }
+
+  async deleteService(id) {
+    await sql`
+      DELETE FROM "Services"
+      WHERE id = ${id}
+    `;
+  }
+
+  // Métodos para a tabela Queue
+  async createQueue(queue) {
+    const { userId, salonId, serviceId, timestamp } = queue;
+    await sql`
+      INSERT INTO "Queue" (userId, salonId, serviceId, timestamp)
+      VALUES (${userId}, ${salonId}, ${serviceId}, ${timestamp})
+    `;
+  }
+
+  async listQueue() {
+    return await sql`SELECT * FROM "Queue"`;
+  }
+
+  async updateQueue(id, queue) {
+    const { userId, salonId, serviceId, timestamp } = queue;
+    await sql`
+      UPDATE "Queue"
+      SET userId = ${userId}, salonId = ${salonId}, serviceId = ${serviceId}, timestamp = ${timestamp}
+      WHERE id = ${id}
+    `;
+  }
+
+  async deleteQueue(id) {
+    await sql`
+      DELETE FROM "Queue"
+      WHERE id = ${id}
+    `;
+  }
+
+  // Métodos para a tabela Reviews
+  async createReview(review) {
+    const { salonId, userId, rating, comment } = review;
+    await sql`
+      INSERT INTO "Reviews" (salonId, userId, rating, comment)
+      VALUES (${salonId}, ${userId}, ${rating}, ${comment})
+    `;
+  }
+
+  async listReviews() {
+    return await sql`SELECT * FROM "Reviews"`;
+  }
+
+  async updateReview(id, review) {
+    const { salonId, userId, rating, comment } = review;
+    await sql`
+      UPDATE "Reviews"
+      SET salonId = ${salonId}, userId = ${userId}, rating = ${rating}, comment = ${comment}
+      WHERE id = ${id}
+    `;
+  }
+
+  async deleteReview(id) {
+    await sql`
+      DELETE FROM "Reviews"
+      WHERE id = ${id}
+    `;
+  }
+
+  // Métodos para a tabela OngoingServices
+  async createOngoingService(ongoingService) {
+    const { salonId, userId, serviceId, expectedEndTime } = ongoingService;
+    await sql`
+      INSERT INTO "OngoingServices" (salonId, userId, serviceId, expectedEndTime)
+      VALUES (${salonId}, ${userId}, ${serviceId}, ${expectedEndTime})
+    `;
+  }
+
+  async listOngoingServices() {
+    return await sql`SELECT * FROM "OngoingServices"`;
+  }
+
+  async updateOngoingService(id, ongoingService) {
+    const { salonId, userId, serviceId, expectedEndTime } = ongoingService;
+    await sql`
+      UPDATE "OngoingServices"
+      SET salonId = ${salonId}, userId = ${userId}, serviceId = ${serviceId}, expectedEndTime = ${expectedEndTime}
+      WHERE id = ${id}
+    `;
+  }
+
+  async deleteOngoingService(id) {
+    await sql`
+      DELETE FROM "OngoingServices"
       WHERE id = ${id}
     `;
   }

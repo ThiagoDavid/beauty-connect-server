@@ -1,24 +1,55 @@
-POST https://beauty-connect-server.onrender.com/videos
+POST https://beauty-connect-server.onrender.com/users
 Content-Type: application/json
 
 {
-  "title": "Video Node",
-  "description": "Description 1",
-  "duration": "180"
+  "name": "Node",
+  "email": "testeUser+3@teste.com",
+  "password": "123",
+  "role": "client"
 }
 
 ###
-GET https://beauty-connect-server.onrender.com/videos
+GET https://beauty-connect-server.onrender.com/users
 
 ###
-PUT https://beauty-connect-server.onrender.com/videos/4
+PUT https://beauty-connect-server.onrender.com/users/4
 Content-Type: application/json
 
 {
-  "title": "Video Atualizado",
-  "description": "Description 1",
-  "duration": "80"
+  "name": "Teste Node",
+  "email": "testeUser+3@teste.com",
+  "password": "123",
+  "role": "client"
 }
 
 ###
-DELETE https://beauty-connect-server.onrender.com/videos/5
+DELETE https://beauty-connect-server.onrender.com/users/3
+
+###
+POST https://beauty-connect-server.onrender.com/salons
+Content-Type: application/json
+
+{
+  "name": "Node",
+  "email": "testeUser+3@teste.com",
+  "password": "123",
+  "role": "client"
+}
+
+###
+GET https://beauty-connect-server.onrender.com/salons
+
+###
+PUT https://beauty-connect-server.onrender.com/salons/4
+Content-Type: application/json
+
+{
+  "name": "Teste Node",
+  "email": "testeUser+3@teste.com",
+  "password": "123",
+  "role": "client"
+}
+
+###
+DELETE https://beauty-connect-server.onrender.com/salons/3
+
