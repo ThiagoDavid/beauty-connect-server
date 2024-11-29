@@ -188,6 +188,25 @@ export class DatabasePostgres {
     return await sql`SELECT * FROM "OngoingServices"`;
   }
 
+  async listOngoingServicesWithDetails(salonId) {
+    if (salonId) {
+      return await sql`
+        SELECT os.*, u.name AS user, s.name AS service, sl.name AS salon
+        FROM "OngoingServices" os
+        JOIN "Users" u ON os."userId" = u.id
+        JOIN "Services" s ON os."serviceId" = s.id
+        JOIN "Salons" sl ON os."salonId" = sl.id
+        WHERE os."salonId" = ${salonId}
+      `;
+    }
+    return await sql`
+      SELECT os.*, u.name AS user, s.name AS service, sl.name AS salon
+      FROM "OngoingServices" os
+      JOIN "Users" u ON os."userId" = u.id
+      JOIN "Services" s ON os."serviceId" = s.id
+      JOIN "Salons" sl ON os."salonId" = sl.id
+    `;
+  }
   async updateOngoingService(id, ongoingService) {
     const { salonId, userId, serviceId, expectedEndTime } = ongoingService;
     await sql`

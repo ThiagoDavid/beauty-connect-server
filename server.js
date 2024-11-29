@@ -209,7 +209,7 @@ server.post('/ongoing-services', async (request, reply) => {
 
 server.get('/ongoing-services', async (request) => {
   const salonId = request.query.salonId ?? null;
-  const ongoingServices = await database.listOngoingServices(salonId);
+  const ongoingServices = await database.listOngoingServicesWithDetails(salonId);
   return ongoingServices;
 });
 
