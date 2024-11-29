@@ -43,7 +43,10 @@ export class DatabasePostgres {
     `;
   }
 
-  async listSalons() {
+  async listSalons(id) {
+    if (id) {
+      return await sql`SELECT * FROM "Salons" WHERE id = ${id}`;
+    }
     return await sql`SELECT * FROM "Salons"`;
   }
 

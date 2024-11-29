@@ -59,8 +59,9 @@ server.post('/salons', async (request, reply) => {
   return reply.status(201).send();
 });
 
-server.get('/salons', async () => {
-  const salons = await database.listSalons();
+server.get('/salons', async (request, replay) => {
+  const id = request.query.id ?? null;
+  const salons = await database.listSalons(id);
   return salons;
 });
 
