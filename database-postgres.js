@@ -11,8 +11,9 @@ export class DatabasePostgres {
   }
 
   async listUsers(search) {
+    console.log(search);
     if (search) {
-      return await sql` SELECT * FROM "Users" WHERE name ILIKE ${'%'+search+'%'}`;
+      return await sql`SELECT * FROM "Users" WHERE LOWER(email) = LOWER(${search})`;
     }
     return await sql`SELECT * FROM "Users"`;
   }
@@ -42,7 +43,15 @@ export class DatabasePostgres {
     `;
   }
 
-  async listSalons() {
+  async listSalons(search) {
+    if (search) {
+      const { id, name } = search;
+      return await sql`
+        SELECT * FROM "Salons"
+        WHERE (${id} IS NULL OR id = ${id})
+        AND (${name} IS NULL OR LOWER(name) LIKE LOWER(${name}))
+      `;
+    }
     return await sql`SELECT * FROM "Salons"`;
   }
 
