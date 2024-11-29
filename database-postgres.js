@@ -12,8 +12,12 @@ export class DatabasePostgres {
 
   async listUsers(search) {
     console.log(search);
-    if (search) {
-      return await sql`SELECT * FROM "Users" WHERE LOWER(email) = LOWER(${search})`;
+    const email = search.email;
+    const id = search.id;
+    if (email) {
+      return await sql`SELECT * FROM "Users" WHERE LOWER(email) = LOWER(${email})`;
+    } else if (id) {
+      return await sql`SELECT * FROM "Users" WHERE id = ${id}`;
     }
     return await sql`SELECT * FROM "Users"`;
   }
@@ -122,7 +126,16 @@ export class DatabasePostgres {
       WHERE id = ${id}
     `;
   }
-
+  async listQueuesBySalonId(salonId) {
+    return await sql`
+      SELECT q.*, s.name AS salon, u.name AS name
+      FROM "Queue" q
+      JOIN "Salons" s ON q."salonId" = s.id
+      JOIN "Users" u ON q."userId" = u.id
+      WHERE q."salonId" = ${salonId}
+      ORDER BY q.timestamp
+    `;
+  }
   async deleteQueue(id) {
     await sql`
       DELETE FROM "Queue"

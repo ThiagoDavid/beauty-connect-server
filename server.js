@@ -22,7 +22,7 @@ server.post('/users', async (request, reply) => {
 
 server.get('/users', async (request) => {
   const search = request.query.search;
-  const users = await database.listUsers(search);
+  const users = await database.listUsers(request.query);
   return users;
 });
 
@@ -133,6 +133,12 @@ server.post('/queue', async (request, reply) => {
 server.get('/queue', async (request) => {
   const salonId = request.query.salonId ?? null;
   const queue = await database.listQueue(salonId);
+  return queue;
+});
+
+server.get('/queue/by-salon/:salonId', async (request) => {
+  const salonId = request.params.salonId;
+  const queue = await database.listQueuesBySalonId(salonId);
   return queue;
 });
 
