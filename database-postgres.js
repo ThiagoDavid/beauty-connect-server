@@ -43,15 +43,7 @@ export class DatabasePostgres {
     `;
   }
 
-  async listSalons(search) {
-    if (search) {
-      const { id, name } = search;
-      return await sql`
-        SELECT * FROM "Salons"
-        WHERE (${id} IS NULL OR id = ${id})
-        AND (${name} IS NULL OR LOWER(name) LIKE LOWER(${name}))
-      `;
-    }
+  async listSalons() {
     return await sql`SELECT * FROM "Salons"`;
   }
 
