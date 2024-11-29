@@ -162,7 +162,10 @@ export class DatabasePostgres {
     `;
   }
 
-  async listOngoingServices() {
+  async listOngoingServices(salonId) {
+    if (salonId) {
+      return await sql`SELECT * FROM "OngoingServices" WHERE "salonId" = ${salonId}`;
+    }
     return await sql`SELECT * FROM "OngoingServices"`;
   }
 

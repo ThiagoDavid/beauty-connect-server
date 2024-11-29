@@ -199,8 +199,9 @@ server.post('/ongoing-services', async (request, reply) => {
   return reply.status(201).send();
 });
 
-server.get('/ongoing-services', async () => {
-  const ongoingServices = await database.listOngoingServices();
+server.get('/ongoing-services', async (request) => {
+  const salonId = request.query.salonId ?? null;
+  const ongoingServices = await database.listOngoingServices(salonId);
   return ongoingServices;
 });
 
