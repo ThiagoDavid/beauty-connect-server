@@ -96,8 +96,9 @@ server.post('/services', async (request, reply) => {
   return reply.status(201).send();
 });
 
-server.get('/services', async () => {
-  const services = await database.listServices();
+server.get('/services', async (request) => {
+  const id = request.query.id ?? null;
+  const services = await database.listServices(id);
   return services;
 });
 
@@ -129,8 +130,9 @@ server.post('/queue', async (request, reply) => {
   return reply.status(201).send();
 });
 
-server.get('/queue', async () => {
-  const queue = await database.listQueue();
+server.get('/queue', async (request) => {
+  const salonId = request.query.salonId ?? null;
+  const queue = await database.listQueue(salonId);
   return queue;
 });
 

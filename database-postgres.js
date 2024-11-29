@@ -75,7 +75,10 @@ export class DatabasePostgres {
     `;
   }
 
-  async listServices() {
+  async listServices(id) {
+    if (id) {
+      return await sql`SELECT * FROM "Services" WHERE id = ${id}`;
+    }
     return await sql`SELECT * FROM "Services"`;
   }
 
@@ -104,8 +107,11 @@ export class DatabasePostgres {
     `;
   }
 
-  async listQueue() {
-    return await sql`SELECT * FROM "Queue"`;
+  async listQueue(salonId) {
+    if (salonId) {
+      return await sql`SELECT * FROM "Queue" WHERE "salonId" = ${salonId} ORDER BY timestamp`;
+    }
+    return await sql`SELECT * FROM "Queue" ORDER BY timestamp`;
   }
 
   async updateQueue(id, queue) {
