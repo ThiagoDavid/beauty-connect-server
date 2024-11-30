@@ -143,6 +143,13 @@ export class DatabasePostgres {
     `;
   }
 
+  async removeUserFromSalonQueue(salonId, userId) {
+    await sql`
+      DELETE FROM "Queue"
+      WHERE "userId" = ${userId} AND "salonId" = ${salonId}
+    `;
+  }
+
   // Métodos para a tabela Reviews
   async createReview(review) {
     const { salonId, userId, rating, comment } = review;
@@ -220,6 +227,13 @@ export class DatabasePostgres {
     await sql`
       DELETE FROM "OngoingServices"
       WHERE id = ${id}
+    `;
+  }
+
+  async finishOngoingService(salonId, userId) {
+    await sql`
+      DELETE FROM "OngoingServices"
+      WHERE "salonId" = ${salonId} AND "userId" = ${userId}
     `;
   }
 

@@ -154,9 +154,10 @@ server.put('/queue/:id', async (request, reply) => {
   return reply.status(204).send();
 });
 
-server.delete('/queue/:id', async (request, reply) => {
-  const queueId = request.params.id;
-  await database.deleteQueue(queueId);
+server.delete('/queue/:salonId/:userId', async (request, reply) => {
+  const salonId = request.params.salonId;
+  const userId = request.params.userId;
+  await database.removeUserFromSalonQueue(salonId, userId);
   return reply.status(204).send();
 });
 
@@ -225,9 +226,10 @@ server.put('/ongoing-services/:id', async (request, reply) => {
   return reply.status(204).send();
 });
 
-server.delete('/ongoing-services/:id', async (request, reply) => {
-  const ongoingServiceId = request.params.id;
-  await database.deleteOngoingService(ongoingServiceId);
+server.delete('/ongoing-services/:salonId/:userId', async (request, reply) => {
+  const salonId = request.params.salonId;
+  const userId = request.params.userId;
+  await database.finishOngoingService(salonId, userId);
   return reply.status(204).send();
 });
 
