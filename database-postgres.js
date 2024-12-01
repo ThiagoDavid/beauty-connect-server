@@ -49,9 +49,37 @@ export class DatabasePostgres {
 
   async listSalons(id) {
     if (id) {
-      return await sql`SELECT * FROM "Salons" WHERE id = ${id}`;
+      return await sql`
+      SELECT s.*, os."expectedEndTime"
+      FROM "Salons" s
+      LEFT JOIN "OngoingServices" os ON s.id = os."salonId"
+      WHERE s.id = ${id}
+      `;
     }
-    return await sql`SELECT * FROM "Salons"`;
+    return await sql`
+      SELECT s.*, os."expectedEndTime"
+      FROM "Salons" s
+      LEFT JOIN "OngoingServices" os ON s.id = os."salonId"
+    `;
+  }
+  async listSalonsWithQueueSize(id) {
+    if (id) {
+      return await sql`
+      SELECT s.*, os."expectedEndTime", (
+        SELECT COUNT(*) FROM "Queue" q WHERE q."salonId" = s.id
+      ) AS "queueSize"
+      FROM "Salons" s
+      LEFT JOIN "OngoingServices" os ON s.id = os."salonId"
+      WHERE s.id = ${id}
+      `;
+    }
+    return await sql`
+      SELECT s.*, os."expectedEndTime", (
+        SELECT COUNT(*) FROM "Queue" q WHERE q."salonId" = s.id
+      ) AS "queueSize"
+      FROM "Salons" s
+      LEFT JOIN "OngoingServices" os ON s.id = os."salonId"
+    `;
   }
 
   async updateSalon(id, salon) {
