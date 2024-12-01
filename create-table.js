@@ -45,7 +45,7 @@ import { sql } from './db.js';
 //   console.error(err);
 // });
 
-// // Excluir tabela Services se existir
+// Excluir tabela Services se existir
 // await sql`DROP TABLE IF EXISTS "Services" CASCADE;`.then(() => {
 //   console.log('Tabela Services deletada...');
 // }).catch((err) => {
@@ -53,16 +53,21 @@ import { sql } from './db.js';
 // });
 
 // // Criar tabela Services
+
+// // Criar tabela Services com nome único e campo de preço
 // await sql`
 // CREATE TABLE "Services" (
 //   "id" SERIAL PRIMARY KEY,
-//   "name" VARCHAR(255) NOT NULL,
-//   "duration" INT NOT NULL
+//   "name" VARCHAR(255) NOT NULL UNIQUE,
+//   "duration" INT NOT NULL,
+//   "price" DECIMAL(10, 2) NOT NULL
 // );`.then(() => {
 //   console.log('Tabela Services criada com sucesso');
 // }).catch((err) => {
 //   console.error(err);
 // });
+
+
 
 // // Excluir tabela SalonServices se existir
 // // await sql`DROP TABLE IF EXISTS "SalonServices" CASCADE;`.then(() => {
@@ -149,11 +154,39 @@ import { sql } from './db.js';
 // });
 
 // Adicionar coluna salonId à tabela Users
-await sql`
-ALTER TABLE "Users"
-ADD COLUMN "salonId" INT REFERENCES "Salons"("id");
-`.then(() => {
-  console.log('Coluna salonId adicionada à tabela Users com sucesso');
-}).catch((err) => {
-  console.error(err);
-});
+// await sql`
+// ALTER TABLE "Users"
+// ADD COLUMN "salonId" INT REFERENCES "Salons"("id");
+// `.then(() => {
+//   console.log('Coluna salonId adicionada à tabela Users com sucesso');
+// }).catch((err) => {
+//   console.error(err);
+// });
+
+
+// Criar tabela SalonServices
+// await sql`
+// CREATE TABLE "SalonServices" (
+//   "salonId" INT REFERENCES "Salons"("id"),
+//   "serviceId" INT REFERENCES "Services"("id"),
+//   "price" DECIMAL(10, 2) NOT NULL,
+//   "duration" INT NOT NULL,
+//   PRIMARY KEY ("salonId", "serviceId")
+// );`.then(() => {
+//   console.log('Tabela SalonServices criada com sucesso');
+// }).catch((err) => {
+//   console.error(err);
+// });
+
+// Alterar a tabela Services para que o nome do serviço seja único e adicionar um campo de preço
+// await sql`
+// ALTER TABLE "Services"
+// ADD COLUMN "price" DECIMAL(10, 2) NOT NULL DEFAULT 50,
+// ADD CONSTRAINT unique_service_name UNIQUE ("name");
+// `.then(() => {
+//   console.log('Tabela Services alterada com sucesso');
+// }).catch((err) => {
+//   console.error(err);
+// });
+
+// Alterar a tabela Services para que o campo price tenha um valor padrão de 50

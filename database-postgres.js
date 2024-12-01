@@ -100,10 +100,32 @@ export class DatabasePostgres {
 
   // Métodos para a tabela Services
   async createService(service) {
-    const { name, duration } = service;
+    const { name, duration, price } = service;
+    try {
+      const result = await sql`
+        WITH existing_service AS (
+          SELECT id FROM "Services" WHERE name = ${name}
+        ), new_service AS (
+          INSERT INTO "Services" (name, duration, price)
+          SELECT ${name}, ${duration}, ${price}
+          WHERE NOT EXISTS (SELECT 1 FROM existing_service)
+          RETURNING id
+        )
+        SELECT id FROM new_service
+        UNION ALL
+        SELECT id FROM existing_service
+      `;
+      return result[0].id;
+    } catch (error) {
+      throw error; // Re-throw any errors
+    }
+  }
+
+  async createSalonService(service) {
+    const { salonId, serviceId, duration, price } = service;
     await sql`
-      INSERT INTO "Services" (name, duration)
-      VALUES (${name}, ${duration})
+      INSERT INTO "SalonServices" ("salonId", "serviceId", duration , price)
+      VALUES (${salonId}, ${serviceId}, ${duration}, ${price})
     `;
   }
 

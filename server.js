@@ -61,7 +61,7 @@ server.post('/salons', async (request, reply) => {
 
 server.get('/salons', async (request, replay) => {
   const id = request.query.id ?? null;
-  const salons = await database.listSalons(id);
+  const salons = await database.listSalonsWithQueueSize(id);
   return salons;
 });
 
@@ -88,11 +88,30 @@ server.delete('/salons/:id', async (request, reply) => {
 
 // Rotas para Services
 server.post('/services', async (request, reply) => {
-  const { name, duration } = request.body;
+  const { name, duration, price, salonId } = request.body;
   await database.createService({
     name,
     duration,
+    price,
   });
+  return reply.status(201).send();
+});
+
+server.post('/salon-services', async (request, reply) => {
+  const { name, duration, price, salonId } = request.body;
+  const serviceId = await database.createService({
+    name,
+    duration,
+    price,
+  });
+
+  await database.createSalonService({
+    salonId,
+    serviceId,
+    duration,
+    price,
+  });
+
   return reply.status(201).send();
 });
 
