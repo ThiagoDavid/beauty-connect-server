@@ -173,8 +173,9 @@ server.post('/reviews', async (request, reply) => {
   return reply.status(201).send();
 });
 
-server.get('/reviews', async () => {
-  const reviews = await database.listReviews();
+server.get('/reviews', async (request) => {
+  const salonId = request.query.salonId ?? null;
+  const reviews = await database.listReviews(salonId);
   return reviews;
 });
 

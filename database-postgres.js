@@ -159,8 +159,20 @@ export class DatabasePostgres {
     `;
   }
 
-  async listReviews() {
-    return await sql`SELECT * FROM "Reviews"`;
+  async listReviews(salonId) {
+    if (salonId) {
+      return await sql`
+      SELECT r.*, u.name AS user
+      FROM "Reviews" r
+      JOIN "Users" u ON r."userId" = u.id
+      WHERE r."salonId" = ${salonId}
+      `;
+    }
+    return await sql`
+      SELECT r.*, u.name AS user
+      FROM "Reviews" r
+      JOIN "Users" u ON r."userId" = u.id
+    `;
   }
 
   async updateReview(id, review) {
