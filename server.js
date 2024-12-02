@@ -1,4 +1,3 @@
-// import { DatabaseMemory } from "./database-memory.js";
 import { fastify } from "fastify";
 import { DatabasePostgres } from "./database-postgres.js";
 
@@ -67,7 +66,7 @@ server.get('/salons', async (request, replay) => {
 
 server.put('/salons/:id', async (request, reply) => {
   const salonId = request.params.id;
-  const { name, latitude, longitude, picture, averageRating, totalReviews, description } = request.body;
+  const { name, latitude, longitude, picture, averageRating, totalReviews, description, address } = request.body;
   await database.updateSalon(salonId, {
     name,
     latitude,
@@ -76,6 +75,7 @@ server.put('/salons/:id', async (request, reply) => {
     averageRating,
     totalReviews,
     description,
+    address,
   });
   return reply.status(204).send();
 });
@@ -86,7 +86,7 @@ server.delete('/salons/:id', async (request, reply) => {
   return reply.status(204).send();
 });
 
-// Rotas para Services
+// Rotas para Services.
 server.post('/services', async (request, reply) => {
   const { name, duration, price, salonId } = request.body;
   await database.createService({
@@ -103,7 +103,7 @@ server.post('/salon-services', async (request, reply) => {
     name,
     duration,
     price,
-  });
+  }); 
 
   await database.createSalonService({
     salonId,
@@ -113,6 +113,12 @@ server.post('/salon-services', async (request, reply) => {
   });
 
   return reply.status(201).send();
+});
+
+server.get('/salon-services', async (request, reply) => {
+  const salonId = request.query.salonId ?? null;
+  const services = await database.listSalonServices(salonId);
+  return services;
 });
 
 server.get('/services', async (request) => {

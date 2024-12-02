@@ -190,3 +190,13 @@ import { sql } from './db.js';
 // });
 
 // Alterar a tabela Services para que o campo price tenha um valor padrão de 50
+
+// Alterar a tabela Salons para adicionar um campo de endereço
+// await sql`
+// ALTER TABLE "Salons"
+// ADD COLUMN "address" VARCHAR(255);
+// `.then(() => {
+//   console.log('Coluna address adicionada à tabela Salons com sucesso');
+// }).catch((err) => {
+//   console.error(err);
+// });

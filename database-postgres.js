@@ -62,31 +62,42 @@ export class DatabasePostgres {
       LEFT JOIN "OngoingServices" os ON s.id = os."salonId"
     `;
   }
-  async listSalonsWithQueueSize(id) {
+
+  async listSalonsWithQueueSize(id = null) {
     if (id) {
       return await sql`
-      SELECT s.*, os."expectedEndTime", (
-        SELECT COUNT(*) FROM "Queue" q WHERE q."salonId" = s.id
-      ) AS "queueSize"
-      FROM "Salons" s
-      LEFT JOIN "OngoingServices" os ON s.id = os."salonId"
-      WHERE s.id = ${id}
+        SELECT DISTINCT ON (s.id) s.*, os."expectedEndTime", (
+          SELECT COUNT(*) FROM "Queue" q WHERE q."salonId" = s.id
+        ) AS "queueSize"
+        FROM "Salons" s
+        LEFT JOIN "OngoingServices" os ON s.id = os."salonId"
+        WHERE s.id = ${id}
+        ORDER BY s.id, os."expectedEndTime"
       `;
     }
     return await sql`
-      SELECT s.*, os."expectedEndTime", (
+      SELECT DISTINCT ON (s.id) s.*, os."expectedEndTime", (
         SELECT COUNT(*) FROM "Queue" q WHERE q."salonId" = s.id
       ) AS "queueSize"
       FROM "Salons" s
       LEFT JOIN "OngoingServices" os ON s.id = os."salonId"
+      ORDER BY s.id, os."expectedEndTime"
     `;
   }
 
   async updateSalon(id, salon) {
-    const { name, latitude, longitude, picture, averageRating, totalReviews, description } = salon;
+    const { name, latitude, longitude, picture, averageRating, totalReviews, description, address } = salon;
     await sql`
       UPDATE "Salons"
-      SET name = ${name}, latitude = ${latitude}, longitude = ${longitude}, picture = ${picture}, "averageRating" = ${averageRating}, "totalReviews" = ${totalReviews}, description = ${description}
+      SET 
+        name = ${name}, 
+        latitude = ${latitude}, 
+        longitude = ${longitude}, 
+        picture = ${picture}, 
+        "averageRating" = ${averageRating}, 
+        "totalReviews" = ${totalReviews}, 
+        description = ${description},
+        address = ${address}
       WHERE id = ${id}
     `;
   }
@@ -119,6 +130,21 @@ export class DatabasePostgres {
     } catch (error) {
       throw error; // Re-throw any errors
     }
+  }
+
+  async listSalonServices(salonId) {
+    return await sql`
+      SELECT s.name AS "salonName", 
+        sv.name AS name, 
+        ss.price, 
+        ss.duration,
+        ss."salonId" || '-' || ss."serviceId" AS id,
+        ss."serviceId"
+      FROM "SalonServices" ss
+      JOIN "Salons" s ON ss."salonId" = s.id
+      JOIN "Services" sv ON ss."serviceId" = sv.id
+      WHERE s.id = ${salonId};
+    `;
   }
 
   async createSalonService(service) {
